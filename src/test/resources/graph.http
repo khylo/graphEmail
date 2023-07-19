@@ -1,0 +1,64 @@
+# Auth, from https://portal.azure.com/#view/Microsoft_AAD_RegisteredApps/ApplicationMenuBlade/~/Overview/quickStartType~/null/sourceType/Microsoft_AAD_IAM/appId/0729efce-867a-4515-a58d-d5eb556467e5/objectId/433e8ecd-80bf-45fa-8956-6b347493df91/isMSAApp~/false/defaultBlade/Overview/appSignInAudience/AzureADMyOrg/servicePrincipalCreated~/true
+
+# From bard
+# curl -X POST \
+  -d "grant_type=client_credentials" \
+  -d "client_id=<client_id>" \
+  -d "client_secret=<client_secret>" \
+  -d "scope=https://graph.microsoft.com/.default" \
+  https://login.microsoftonline.com/<tenant_id>/oauth2/token
+
+# followed by
+# curl -X GET \
+  -H "Authorization: Bearer <bearer_token>" \
+  https://graph.microsoft.com/v1.0/me
+@clientId=
+@tenentId=
+# Secret on  https://portal.azure.com/#view/Microsoft_AAD_RegisteredApps/ApplicationMenuBlade/~/Credentials/quickStartType~/null/sourceType/Microsoft_AAD_IAM/appId/0729efce-867a-4515-a58d-d5eb556467e5/objectId/433e8ecd-80bf-45fa-8956-6b347493df91/isMSAApp~/false/defaultBlade/Overview/appSignInAudience/AzureADMyOrg/servicePrincipalCreated~/true
+@secretId=
+
+@clientId=
+@tenentId=
+###
+GET https://graph.microsoft.com/v1.0/me
+Authorization: Bearer: 
+
+###
+GET https://login.microsoftonline.com/{{tenentId}}/oauth2/v2.0/authorize?
+client_id={{clientId}}
+&response_type=code
+&redirect_uri=http%3A%2F%2Flocalhost%2Fmyapp%2F
+&response_mode=query
+&scope=offline_access%20user.read%20mail.read
+&state=12345  HTTP/1.1
+
+###
+
+# Taken from https://learn.microsoft.com/en-us/graph/api/user-sendmail?view=graph-rest-1.0&tabs=https
+POST https://graph.microsoft.com/v1.0/me/sendMail
+Content-type: application/json
+
+{
+  "message": {
+    "subject": "Meet for lunch?",
+    "body": {
+      "contentType": "Text",
+      "content": "The new cafeteria is open."
+    },
+    "toRecipients": [
+      {
+        "emailAddress": {
+          "address": "frannis@contoso.onmicrosoft.com"
+        }
+      }
+    ],
+    "ccRecipients": [
+      {
+        "emailAddress": {
+          "address": "danas@contoso.onmicrosoft.com"
+        }
+      }
+    ]
+  },
+  "saveToSentItems": "false"
+}
